@@ -68,7 +68,7 @@ namespace Program
         public int NumberOfEndpoints;
         public int NumberOfRequests;
         public int NumberOfCacheServers;
-        public int CapacityOfCacheServer;
+        public long CapacityOfCacheServer;
 
         public List<Video> Videos = new List<Video>();
         public List<EndPoint> Endpoint = new List<EndPoint>();

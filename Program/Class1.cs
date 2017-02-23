@@ -9,27 +9,27 @@ namespace Program
 
     internal  class Knapsack
     {
-        private  int[][] M { get; set; }
-        private  int[][] P { get; set; }
+        private  long[][] M { get; set; }
+        private long[][] P { get; set; }
         private  Item[] I { get; set; }
-        public  int MaxValue { get; private set; }
-        private  int W { get; set; }
+        public long MaxValue { get; private set; }
+        private long W { get; set; }
 
-        public Knapsack(List<Item> items, int maxWeight)
+        public Knapsack(List<Item> items, long maxWeight)
         {
             I = items.ToArray();
             W = maxWeight;
 
             var n = I.Length;
-            M = new int[n + 1][];
-            P = new int[n + 1][];
+            M = new long[n + 1][];
+            P = new long[n + 1][];
             for (var i = 0; i < M.Length; i++)
             {
-                M[i] = new int[W + 1];
+                M[i] = new long[W + 1];
             }
             for (var i = 0; i < P.Length; i++)
             {
-                P[i] = new int[W + 1];
+                P[i] = new long[W + 1];
             }
         }
 
@@ -37,9 +37,9 @@ namespace Program
         {
             var n = I.Length;
 
-            for (var i = 1; i <= n; i++)
+            for (long i = 1; i <= n; i++)
             {
-                for (var j = 0; j <= W; j++)
+                for (long j = 0; j <= W; j++)
                 {
                     if (I[i - 1].w <= j)
                     {
@@ -68,13 +68,13 @@ namespace Program
             var list = new List<Item>();
             list.AddRange(I);
             var w = W;
-            var i = list.Count;
+            int i = list.Count;
 
             var picked = new List<Item>();         
 
 
-            var valueSum = 0;
-            var weightSum = 0;
+            long valueSum = 0;
+            long weightSum = 0;
             while (i >= 0 && w >= 0)
             {
                 if (P[i][w] == 1)
@@ -106,7 +106,7 @@ namespace Program
             }
         }
 
-        private static int Max(int a, int b)
+        private static long Max(long a, long b)
         {
             return a > b ? a : b;
         }
@@ -115,8 +115,8 @@ namespace Program
     internal class Item
     {
         public int Id { get; set; }
-        public int v { get; set; } // value
-        public int w { get; set; } // weight
+        public long v { get; set; } // value
+        public long w { get; set; } // weight
 
         public override string ToString()
         {

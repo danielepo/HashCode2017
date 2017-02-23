@@ -20,10 +20,11 @@ namespace Program
         {
             var input = _loader.Load();
             List<Server> servers = Map(input);
-            _generator.Convert(servers.ToDictionary(x => x.ID, x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
+            string content = _generator.Convert(servers.ToDictionary(x => x.ID, x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
+            _generator.Generate(content);
         }
 
-        private List<Video> GetVideoForServer(Server server, int maxWeight, Dictionary<int, Video> videos)
+        private List<Video> GetVideoForServer(Server server, long maxWeight, Dictionary<int, Video> videos)
         {
             List<Item> videoForKnapsack = GetVideoForKnapsack(server);
 
@@ -45,7 +46,8 @@ namespace Program
                 dict[video].Add(request2);
             }
 
-            Dictionary<Video, int> quasiItem = dict.ToDictionary(x => x.Key, x => x.Value.Select(req => req.DeltaLatency * req.Count).Sum());
+            Dictionary<Video, long> quasiItem = dict.ToDictionary(x => x.Key, x => x.Value.Select(req => req.DeltaLatency * req.Count)
+                .Sum());
 
             return quasiItem.Select(x => new Item() { Id = x.Key.ID, v = x.Value, w = x.Key.Size }).ToList();
         }
@@ -97,22 +99,22 @@ namespace Program
     public class Server
     {
             public int ID;
-            public int Latency;
+            public long Latency;
             public List<EndPoint2> endPoints = new List<EndPoint2>();
     }
 
     public class EndPoint2
     {
             public int ID;
-            public int LatencyDataCenter;
+            public long LatencyDataCenter;
             public List<Request2> requests = new List<Request2>();
         }
 
     public class Request2
     {
         public Video Video;
-        public int DeltaLatency;
-        public int Count;
+        public long DeltaLatency;
+        public long Count;
     }
 }
 }

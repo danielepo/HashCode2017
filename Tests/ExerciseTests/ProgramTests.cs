@@ -18,14 +18,14 @@ namespace Tests.ExerciseTests
         [Test]
         public void TestMethod1()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>();
             Assert.That(generator.Convert(result).GetRow(1), Is.EqualTo("0"));
         }
         [Test]
         public void TestMethod2()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>
             {
                 [42] = new List<Video>()
@@ -36,7 +36,7 @@ namespace Tests.ExerciseTests
         [Test]
         public void TestMethod3()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>
             {
                 [47] = new List<Video>(),
@@ -47,7 +47,7 @@ namespace Tests.ExerciseTests
         [Test]
         public void TestMethod4()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>
             {
                 {1, new List<Video> {new Video {ID = 10}}}
@@ -59,7 +59,7 @@ namespace Tests.ExerciseTests
         [Test]
         public void TestMethod5()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>
             {
                 {1, new List<Video> {new Video {ID = 10 } }},
@@ -74,7 +74,7 @@ namespace Tests.ExerciseTests
         [Test]
         public void TestMethod6()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>
             {
                 {1, new List<Video>
@@ -92,7 +92,7 @@ namespace Tests.ExerciseTests
         [Test]
         public void TestMethod7()
         {
-            var generator = new Generator();
+            var generator = new Generator("C:\\output.txt");
             var result = new Dictionary<int, List<Video>>
             {
                 {

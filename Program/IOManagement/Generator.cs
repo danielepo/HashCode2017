@@ -6,9 +6,16 @@ namespace Program.IOManagement
 {
     public class Generator : IGenerator
     {
-        public void Generate(string path, Dictionary<int, List<Video>> result)
+        private readonly string path;
+
+        public Generator(string path)
         {
-            System.IO.File.WriteAllText(path,Convert(result));
+            this.path = path;
+        }
+
+        public void Generate(string content)
+        {
+            System.IO.File.WriteAllText(path,content);
         }
 
         

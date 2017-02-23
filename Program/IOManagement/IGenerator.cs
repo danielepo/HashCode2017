@@ -5,5 +5,7 @@ namespace Program.IOManagement
     public interface IGenerator
     {
         string Convert(Dictionary<int, List<Video>> toDictionary);
+
+        void Generate(string content);
     }
 }

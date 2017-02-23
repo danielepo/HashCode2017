@@ -12,7 +12,7 @@ namespace Tests.UnitTests
         [Test]
         public void TestMethod1()
         {
-            var loader = new Loader();
+            var loader = new Loader("C:\\data.txt");
             Assert.That(loader.Load(), Is.EqualTo("content"));
         }
 

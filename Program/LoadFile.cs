@@ -22,7 +22,7 @@ namespace Program
             data.NumberOfEndpoints = int.Parse(li[1]);
             data.NumberOfRequests = int.Parse(li[2]);
             data.NumberOfCacheServers = int.Parse(li[3]);
-            data.CapacityOfCacheServer = int.Parse(li[4]);
+            data.CapacityOfCacheServer = long.Parse(li[4]);
 
 
             string line2 = file.ReadLine();// L2
