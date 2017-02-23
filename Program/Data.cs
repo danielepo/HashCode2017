@@ -8,14 +8,28 @@ namespace Program
 {
 
 
-    public class Video {
+    public sealed class Video {
 
         public int ID;
 
         public int Size;
 
+        private bool Equals(Video other)
+        {
+            return ID == other.ID;
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+            return obj is Video && Equals((Video)obj);
+        }
 
+        public override int GetHashCode()
+        {
+            return ID;
+        }
     }
 
     public class EndPoint {
@@ -61,7 +75,7 @@ namespace Program
         public int NumberOfCacheServers;
         public int CapacityOfCacheServer;
 
-        List<Video> Videos = new List<Video>();
-        List<EndPoint> Endpoint = new List<EndPoint>();
+        public List<Video> Videos = new List<Video>();
+        public List<EndPoint> Endpoint = new List<EndPoint>();
     }
 }

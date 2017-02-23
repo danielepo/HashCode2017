@@ -2,6 +2,6 @@
 {
     public interface ILoader
     {
-        string Load();
+        Data Load();
     }
 }

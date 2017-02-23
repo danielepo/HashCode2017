@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Program;
 using Program.IOManagement;
 
@@ -18,7 +19,7 @@ namespace Tests.UnitTests
 
     class GeneratorStub : IGenerator
     {
-        public void Generate()
+        public void Generate(Dictionary<Server, List<Video>> toDictionary)
         {
             throw new System.NotImplementedException();
         }

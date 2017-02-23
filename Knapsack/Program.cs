@@ -21,7 +21,7 @@ namespace Knapsack
 
             // --------- Insert data here                        
             const int maxWeight = 10;
-            const int N = 100000;
+            const int N = 10;
             var items = new List<Item>();
 
             for (var i = 0; i < N; i++)
@@ -45,8 +45,8 @@ namespace Knapsack
 
             write("Done\n\n");
 
-            // Knapsack.PrintPicksMatrix(write);            
-            Knapsack.Print(write, false);
+             //Knapsack.PrintPicksMatrix(write);            
+            Knapsack.Print(write, true);
 
             write(string.Format("\n\nDuration: {0}\nPress a key to exit\n",
                 stopwatch.Elapsed.ToString()));

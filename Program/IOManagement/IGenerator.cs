@@ -1,7 +1,9 @@
-﻿namespace Program.IOManagement
+﻿using System.Collections.Generic;
+
+namespace Program.IOManagement
 {
     public interface IGenerator
     {
-        void Generate();
+        void Generate(Dictionary<CacheServer, List<Video>> toDictionary);
     }
 }

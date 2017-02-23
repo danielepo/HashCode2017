@@ -1,8 +1,10 @@
-﻿namespace Program.IOManagement
+﻿using System.Collections.Generic;
+
+namespace Program.IOManagement
 {
     public class Generator : IGenerator
     {
-        public void Generate()
+        public void Generate(Dictionary<Server, List<Video>> toDictionary)
         {
             //
         }
