@@ -57,24 +57,66 @@ namespace Program
 
         private List<Server> Map(Data input)
         {
-            throw new NotImplementedException();
+            List<Server> servers = new List<Server>();
+
+            foreach (EndPoint ep in input.Endpoint)
+            {
+                foreach (ConnectedServer cs in ep.ConnectedServers)
+                {
+                    if (!servers.Any(x => x.ID == cs.CacheServerID))
+                    {
+                        servers.Add(new Server { ID = cs.CacheServerID, Latency = cs.LatencyCache });
+                    }
+                }
+            }
+
+            foreach (Server ser in servers)
+            {
+                IEnumerable<EndPoint> endPointCheHannoQuestoServer = input.Endpoint.Where(x => x.ConnectedServers.Any(y => y.CacheServerID == ser.ID));
+                foreach (EndPoint ep in endPointCheHannoQuestoServer)
+                {
+                    ser.endPoints.Add(new EndPoint2 { ID = ep.ID, LatencyDataCenter = ep.LatencyDataCenter });
+                }
+
+
+                foreach (EndPoint2 ep2 in ser.endPoints)
+                {
+                    var richiesteCheVannoSuQuestoEp = input.Requests.Where(x => x.EndPointID == ep2.ID);
+                    foreach (Request req in richiesteCheVannoSuQuestoEp)
+                    {
+                        var req2 = new Request2();
+                        req2.Count = req.NumberOfRequests;
+                        req2.Video = input.Videos.First(x => x.ID == req.VideoID);
+                        req2.DeltaLatency = ep2.LatencyDataCenter - ser.Latency;
+
+
+                        ep2.requests.Add(req2);
+                    }
+                }         
+            }
+
+
+            return servers;
+        }
+
+        public class Server
+        {
+            public int ID;
+            public int Latency;
+            public List<EndPoint2> endPoints = new List<EndPoint2>();
+        }
+
+        public class EndPoint2
+        {
+            public int ID;
+            public int LatencyDataCenter;
+            public List<Request2> requests = new List<Request2>();
+        }
+
+        public class Request2
+        {
+            public Video Video;
+            public int DeltaLatency;
+            public int Count;
         }
     }
-
-    public class Server
-    {
-        public List<EndPoint2> endPoints;
-    }
-
-    public class EndPoint2
-    {
-        public List<Request2> requests;
-        }
-
-    public class Request2
-    {
-        public Video Video;
-        public int DeltaLatency;
-        public int Count;
-    }
-}
