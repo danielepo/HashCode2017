@@ -17,7 +17,7 @@ namespace Program
         {
             var input = _loader.Load();
             //fai calcoli
-            _generator.Generate();
+            _generator.Generate("output.txt",null);
         }
     }
 }
