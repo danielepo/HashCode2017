@@ -10,7 +10,7 @@ namespace Tests.UnitTests
         [Test]
         public void TestMethod1()
         {
-            var program = new Program.Program(new LoaderStub(),new GeneratorStub());
+            var program = new Program.Solver(new LoaderStub(),new GeneratorStub());
             program.Run();
         }
     }
