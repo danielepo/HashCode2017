@@ -13,6 +13,7 @@ namespace Tests.UnitTests
             var program = new Program.Solver(new LoaderStub(),new GeneratorStub());
             program.Run();
         }
+
     }
 
     class GeneratorStub : IGenerator
