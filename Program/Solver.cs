@@ -55,7 +55,7 @@ namespace Program
             return quasiItem.Select(x => new Item() { Id = x.Key.ID, v = x.Value, w = x.Key.Size }).ToList();
         }
 
-        private List<Server> Map(Data input)
+        public List<Server> Map(Data input)
         {
             List<Server> servers = new List<Server>();
 
@@ -92,7 +92,7 @@ namespace Program
 
                         ep2.requests.Add(req2);
                     }
-                }         
+                }
             }
 
 
@@ -120,3 +120,4 @@ namespace Program
             public int Count;
         }
     }
+}
