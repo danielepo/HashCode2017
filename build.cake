@@ -29,12 +29,14 @@ Setup(context =>
 {
     foreach(var folder in projectFolders)
     {
-        foreach(var tmp in new [] {"/bin", "/obj"})
+        foreach(var tmp in new [] {"/bin", "/obj"}){
+
         var del =  folder + tmp;
         if(DirectoryExists(del))
         {
             Information("Deleting " + del);
             DeleteDirectory(del, true);
+        }
         }
     }
     foreach(var file in outputFiles)
@@ -104,5 +106,5 @@ Task("All")
 //////////////////////////////////////////////////////////////////////
 
 RunTarget(target);
-RunTarget(pack);
-RunTarget(all);
+// RunTarget(pack);
+// RunTarget(all);
