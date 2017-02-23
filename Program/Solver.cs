@@ -20,7 +20,7 @@ namespace Program
         {
             var input = _loader.Load();
             List<Server> servers = Map(input);
-            _generator.Convert(servers.ToDictionary(x => Map(x), x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
+            _generator.Convert(servers.ToDictionary(x => x.Id, x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
         }
 
         private List<Video> GetVideoForServer(Server server, int maxWeight, Dictionary<int, Video> videos)
@@ -30,11 +30,6 @@ namespace Program
             var kn = new Knapsack(videoForKnapsack, maxWeight);
             kn.Run();
             return kn.Print().Select(x => videos[x.Id]).ToList();
-        }
-
-        private ConnectedServer Map(Server server)
-        {
-            throw new NotImplementedException();
         }
 
         private List<Item> GetVideoForKnapsack(Server server)
@@ -63,6 +58,7 @@ namespace Program
 
     public class Server
     {
+        public int Id;
         public List<EndPoint2> endPoints;
     }
 

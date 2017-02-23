@@ -19,16 +19,16 @@ namespace Tests.ExerciseTests
         public void TestMethod1()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>();
+            var result = new Dictionary<int, List<Video>>();
             Assert.That(generator.Convert(result).GetRow(1), Is.EqualTo("0"));
         }
         [Test]
         public void TestMethod2()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>
+            var result = new Dictionary<int, List<Video>>
             {
-                [new ConnectedServer()] = new List<Video>()
+                [42] = new List<Video>()
             };
             Assert.That(generator.Convert(result).GetRow(1), Is.EqualTo("1"));
         }
@@ -37,10 +37,10 @@ namespace Tests.ExerciseTests
         public void TestMethod3()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>
+            var result = new Dictionary<int, List<Video>>
             {
-                [new ConnectedServer()] = new List<Video>(),
-                [new ConnectedServer()] = new List<Video>()
+                [47] = new List<Video>(),
+                [48] = new List<Video>()
             };
             Assert.That(generator.Convert(result).GetRow(1), Is.EqualTo("2"));
         }
@@ -48,9 +48,9 @@ namespace Tests.ExerciseTests
         public void TestMethod4()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>
+            var result = new Dictionary<int, List<Video>>
             {
-                {new ConnectedServer {CacheServerID = 1}, new List<Video> {new Video {ID = 10}}}
+                {1, new List<Video> {new Video {ID = 10}}}
             };
             var converted = generator.Convert(result);
             Assert.That(converted.GetRow(1), Is.EqualTo("1"));
@@ -60,10 +60,10 @@ namespace Tests.ExerciseTests
         public void TestMethod5()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>
+            var result = new Dictionary<int, List<Video>>
             {
-                {new ConnectedServer {CacheServerID = 1}, new List<Video> {new Video {ID = 10 } }},
-                {new ConnectedServer {CacheServerID = 2}, new List<Video> {new Video {ID = 22 } }}
+                {1, new List<Video> {new Video {ID = 10 } }},
+                {2, new List<Video> {new Video {ID = 22 } }}
             };
             var converted = generator.Convert(result);
             Assert.That(converted.GetRow(1), Is.EqualTo("2"));
@@ -75,9 +75,9 @@ namespace Tests.ExerciseTests
         public void TestMethod6()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>
+            var result = new Dictionary<int, List<Video>>
             {
-                {new ConnectedServer {CacheServerID = 1}, new List<Video>
+                {1, new List<Video>
                 {
                     new Video {ID = 10},
                     new Video {ID = 25},
@@ -93,10 +93,10 @@ namespace Tests.ExerciseTests
         public void TestMethod7()
         {
             var generator = new Generator();
-            var result = new Dictionary<ConnectedServer, List<Video>>
+            var result = new Dictionary<int, List<Video>>
             {
                 {
-                    new ConnectedServer {CacheServerID = 1}, new List<Video>
+                    1, new List<Video>
                     {
                         new Video {ID = 10},
                         new Video {ID = 25},
@@ -105,7 +105,7 @@ namespace Tests.ExerciseTests
                     }
                 },
                 {
-                    new ConnectedServer {CacheServerID = 3}, new List<Video>
+                    3, new List<Video>
                     {
                         new Video {ID = 120},
                         new Video {ID = 225},
@@ -114,7 +114,7 @@ namespace Tests.ExerciseTests
                     }
                 },
                 {
-                    new ConnectedServer {CacheServerID = 700}, new List<Video>
+                    700, new List<Video>
                     {
                         new Video {ID = 35},
                         new Video {ID = 47}
