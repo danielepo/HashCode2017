@@ -6,7 +6,12 @@ namespace Program.IOManagement
     {
         public Data Load()
         {
-            throw new NotImplementedException();
+            LoadFile loadFile = new LoadFile();
+
+
+            return loadFile.LoadFrom("C:\\datas.txt");
+
+
         }
     }
 }
