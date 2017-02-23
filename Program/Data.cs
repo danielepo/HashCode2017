@@ -32,24 +32,19 @@ namespace Program
 
         public int LatencyCache;
 
-        public CacheServer CacheServer;
-    }
-
-    public class CacheServer {
-
-        public int ID;//0
-
-       
+        public int CacheServerID;
 
     }
+
+ 
 
     public class Request {
 
-        int VideoID;
+        public int VideoID;
 
-        int EndPointID;
+        public int EndPointID;
 
-        int NumberOfRequests;
+        public int NumberOfRequests;
 
     }
 
@@ -61,7 +56,8 @@ namespace Program
         public int NumberOfCacheServers;
         public int CapacityOfCacheServer;
 
-        List<Video> Videos = new List<Video>();
-        List<EndPoint> Endpoint = new List<EndPoint>();
+        public List<Video> Videos = new List<Video>();
+        public List<EndPoint> Endpoint = new List<EndPoint>();
+        public List<Request> Requests = new List<Request>();
     }
 }
