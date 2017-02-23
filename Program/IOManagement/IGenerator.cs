@@ -1,4 +1,4 @@
-﻿namespace OutputFileGenerator
+﻿namespace Program.IOManagement
 {
     public interface IGenerator
     {

@@ -1,4 +1,4 @@
-﻿namespace InputFileLoader
+﻿namespace Program.IOManagement
 {
     public class Loader : ILoader
     {

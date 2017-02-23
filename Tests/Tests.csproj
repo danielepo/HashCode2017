@@ -60,14 +60,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\InputFileLoader.csproj">
-      <Project>{199D3A59-2657-446D-BC6A-04FD42E98404}</Project>
-      <Name>InputFileLoader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OutputFileGenerator\OutputFileGenerator.csproj">
-      <Project>{706A94B5-2D7F-4EB9-A355-01A7AC146BC2}</Project>
-      <Name>OutputFileGenerator</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Program\Program.csproj">
       <Project>{C81619E4-A1D3-41C3-ABD0-357294DC7CEF}</Project>
       <Name>Program</Name>

@@ -1,5 +1,4 @@
-﻿using InputFileLoader;
-using OutputFileGenerator;
+﻿using Program.IOManagement;
 
 namespace Program
 {
