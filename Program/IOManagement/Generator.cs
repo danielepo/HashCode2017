@@ -11,13 +11,13 @@ namespace Program.IOManagement
 
         }
 
-        public string Convert(Dictionary<CacheServer, List<Video>> result)
+        public string Convert(Dictionary<ConnectedServer, List<Video>> result)
         {
 
             var sb = new StringBuilder();
             sb.Append(result.Count.ToString());
             sb.Append("\n");
-            sb.Append(string.Join("\n",result.Select(x => $"{x.Key.ID} {string.Join(" ",x.Value.Select(y => y.ID))}")));
+            sb.Append(string.Join("\n",result.Select(x => $"{x.Key.CacheServerID} {string.Join(" ",x.Value.Select(y => y.ID))}")));
             return sb.ToString();
         }
     }

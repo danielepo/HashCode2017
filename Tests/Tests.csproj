@@ -57,13 +57,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Program\Program.csproj">
-      <Project>{C81619E4-A1D3-41C3-ABD0-357294DC7CEF}</Project>
-      <Name>Program</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Program\Program.csproj">
+      <Project>{c81619e4-a1d3-41c3-abd0-357294dc7cef}</Project>
+      <Name>Program</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

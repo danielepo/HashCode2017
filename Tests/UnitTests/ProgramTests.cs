@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
-using Program;
 using Program.IOManagement;
-
 namespace Tests.UnitTests
 {
     [TestFixture]
