@@ -4,6 +4,6 @@ namespace Program.IOManagement
 {
     public interface IGenerator
     {
-        void Generate(Dictionary<CacheServer, List<Video>> toDictionary);
+        string Convert(Dictionary<ConnectedServer, List<Video>> toDictionary);
     }
 }

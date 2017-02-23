@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using Program;
 using Program.IOManagement;
-
 namespace Tests.UnitTests
 {
     [TestFixture]
@@ -19,7 +18,7 @@ namespace Tests.UnitTests
 
     class GeneratorStub : IGenerator
     {
-        public void Generate(Dictionary<Server, List<Video>> toDictionary)
+        public string Convert(Dictionary<ConnectedServer, List<Video>> toDictionary)
         {
             throw new System.NotImplementedException();
         }
@@ -27,7 +26,7 @@ namespace Tests.UnitTests
 
     class LoaderStub : ILoader
     {
-        public string Load()
+        public Data Load()
         {
             throw new System.NotImplementedException();
         }

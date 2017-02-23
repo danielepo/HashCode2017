@@ -1,10 +1,12 @@
-﻿namespace Program.IOManagement
+﻿using System;
+
+namespace Program.IOManagement
 {
     public class Loader : ILoader
     {
-        public string Load()
+        public Data Load()
         {
-            return "content";
+            throw new NotImplementedException();
         }
     }
 }

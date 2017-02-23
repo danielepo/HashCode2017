@@ -20,7 +20,7 @@ namespace Program
         {
             var input = _loader.Load();
             List<Server> servers = Map(input);
-            _generator.Generate(servers.ToDictionary(x => Map(x), x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
+            _generator.Convert(servers.ToDictionary(x => Map(x), x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
         }
 
         private List<Video> GetVideoForServer(Server server, int maxWeight, Dictionary<int, Video> videos)
@@ -32,7 +32,7 @@ namespace Program
             return kn.Print().Select(x => videos[x.Id]).ToList();
         }
 
-        private CacheServer Map(Server server)
+        private ConnectedServer Map(Server server)
         {
             throw new NotImplementedException();
         }
