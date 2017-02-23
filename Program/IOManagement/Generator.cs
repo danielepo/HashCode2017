@@ -6,9 +6,9 @@ namespace Program.IOManagement
 {
     public class Generator : IGenerator
     {
-        public void Generate()
+        public void Generate(string path, Dictionary<ConnectedServer, List<Video>> result)
         {
-
+            System.IO.File.WriteAllText(path,Convert(result));
         }
 
         

@@ -69,7 +69,7 @@ namespace Program
     public class EndPoint2
     {
         public List<Request2> requests;
-    }
+        }
 
     public class Request2
     {
