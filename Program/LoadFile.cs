@@ -51,7 +51,7 @@ namespace Program
                 for (int j = 0; j < connectedCaches; j++)
                 {
                     string lineConnC = file.ReadLine();// ConnecteCache
-                    string[] cc = lineEp.Split(' ');
+                    string[] cc = lineConnC.Split(' ');
 
                     ConnectedServer conn = new ConnectedServer();
                     conn.CacheServerID = int.Parse(cc[0]);
