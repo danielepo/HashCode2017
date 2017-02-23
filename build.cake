@@ -9,12 +9,17 @@
 
 var target = Argument("target", "Default");
 var pack = Argument("target", "Pack");
+var all = Argument("target", "All");
+
 var configuration = Argument("configuration", "Debug");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION/////////////////////////////////////////////////////////////////////
 
 // Define directories.
+var zip = "sources.zip";
+var projectFolders = new [] {"Program", "Tests"};
+var outputFiles = new []{zip};
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -22,16 +27,24 @@ var configuration = Argument("configuration", "Debug");
 
 Setup(context =>
 {
-    // var bin =  "Training/bin";
-    // if(DirectoryExists(bin))
-    //     DeleteDirectory(bin,true);
-    
-    // var obj = "Training/obj";
-    // if(DirectoryExists(obj))
-    //     DeleteDirectory(obj,true);
-    
-    // if(FileExists(package))
-    //     DeleteFile(package);
+    foreach(var folder in projectFolders)
+    {
+        foreach(var tmp in new [] {"/bin", "/obj"})
+        var del =  folder + tmp;
+        if(DirectoryExists(del))
+        {
+            Information("Deleting " + del);
+            DeleteDirectory(del, true);
+        }
+    }
+    foreach(var file in outputFiles)
+    {
+        if(FileExists(file)) {
+            
+            Information("Deleting " + file);
+            DeleteFile(file);
+        }
+    }
 });
 
 Task("Restore-NuGet-Packages")
@@ -63,12 +76,6 @@ Task("Run-Unit-Tests")
 Task("Package-Sources")
     .Does(() => 
 {
-    var repositoryDirectoryPath = DirectoryPath.FromString(".");
-    // var currentBranch = GitBranchCurrent(repositoryDirectoryPath);  
-    // Information(currentBranch.Remotes[0].Url);
-    // if(!DirectoryExists("./temp/"))
-    //     CreateDirectory("./temp/");
-
     StartPowershellScript("git", args =>
     {
         args.Append("archive")
@@ -76,15 +83,7 @@ Task("Package-Sources")
             .Append("sources.zip")
             .Append("HEAD");
     }); 
-    // GitClone(currentBranch.Remotes[0].Url, "./temp/","","");
-    // Zip("./temp", "package.zip");
-    // if(DirectoryExists("./temp")) 
-    //    StartPowershellScript("Remove-Item", args =>
-    //     {
-    //         args.Append("-Recurse")
-    //             .Append("-Force")
-    //             .AppendQuoted("./temp");
-    //     }); 
+
 });
 
 
@@ -95,9 +94,15 @@ Task("Default")
 Task("Pack")
     .IsDependentOn("Package-Sources");
 
+
+Task("All")
+    .IsDependentOn("Default")
+    .IsDependentOn("Package-Sources");
+
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
 //////////////////////////////////////////////////////////////////////
 
 RunTarget(target);
 RunTarget(pack);
+RunTarget(all);

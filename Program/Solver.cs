@@ -2,12 +2,12 @@
 
 namespace Program
 {
-    public class Program
+    public class Solver
     {
         private readonly ILoader _loader;
         private readonly IGenerator _generator;
 
-        public Program(ILoader loader, IGenerator generator)
+        public Solver(ILoader loader, IGenerator generator)
         {
             _loader = loader;
             _generator = generator;
