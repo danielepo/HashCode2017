@@ -1,156 +1,191 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
 
 namespace Knapsack
 {
-    internal class Bag : IEnumerable<Bag.Item>
-    {
-        private List<Item> items;
-        private const int MaxWeightAllowed = 400;
-
-        public Bag()
-        {
-            items = new List<Item>();
-        }
-
-        private void AddItem(Item i)
-        {
-            if ((TotalWeight + i.Weight) <= MaxWeightAllowed)
-                items.Add(i);
-        }
-
-        public void Calculate(List<Item> items)
-        {
-            foreach (Item i in Sorte(items))
-            {
-                AddItem(i);
-            }
-        }
-
-        private List<Item> Sorte(List<Item> inputItems)
-        {
-            List<Item> choosenItems = new List<Item>();
-            for (int i = 0; i < inputItems.Count; i++)
-            {
-                int j = -1;
-                if (i == 0)
-                {
-                    choosenItems.Add(inputItems[i]);
-                }
-                if (i > 0)
-                {
-                    if (!RecursiveF(inputItems, choosenItems, i, choosenItems.Count - 1, false, ref j))
-                    {
-                        choosenItems.Add(inputItems[i]);
-                    }
-                }
-            }
-            return choosenItems;
-        }
-
-        private bool RecursiveF(List<Item> knapsackItems, List<Item> choosenItems, int i, int lastBound, bool dec, ref int indxToAdd)
-        {
-            if (!(lastBound < 0))
-            {
-                if (knapsackItems[i].ResultWV < choosenItems[lastBound].ResultWV)
-                {
-                    indxToAdd = lastBound;
-                }
-                return RecursiveF(knapsackItems, choosenItems, i, lastBound - 1, true, ref indxToAdd);
-            }
-            if (indxToAdd > -1)
-            {
-                choosenItems.Insert(indxToAdd, knapsackItems[i]);
-                return true;
-            }
-            return false;
-        }
-
-        #region IEnumerable<Item> Members
-        IEnumerator<Item> IEnumerable<Item>.GetEnumerator()
-        {
-            foreach (Item i in items)
-                yield return i;
-        }
-        #endregion
-
-        #region IEnumerable Members
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return items.GetEnumerator();
-        }
-        #endregion
-
-        public int TotalWeight
-        {
-            get
-            {
-                var sum = 0;
-                foreach (Item i in this)
-                {
-                    sum += i.Weight;
-                }
-                return sum;
-            }
-        }
-
-        public class Item
-        {
-            public string Name { get; set; }
-            public int Weight { get; set; }
-            public int Value { get; set; }
-
-            public int ResultWV
-            {
-                get { return Weight - Value; }
-            }
-
-            public override string ToString()
-            {
-                return "Name : " + Name + "        Wieght : " + Weight + "       Value : " + Value + "     ResultWV : " + ResultWV;
-            }
-        }
-    }
-
-    internal class Program
+    public class Program2
     {
         private static void Main(string[] args)
         {
-            List<Bag.Item> knapsackItems = new List<Bag.Item>();
-            knapsackItems.Add(new Bag.Item() { Name = "Map", Weight = 9, Value = 150 });
-            knapsackItems.Add(new Bag.Item() { Name = "Water", Weight = 153, Value = 200 });
-            knapsackItems.Add(new Bag.Item() { Name = "Compass", Weight = 13, Value = 35 });
-            knapsackItems.Add(new Bag.Item() { Name = "Sandwitch", Weight = 50, Value = 160 });
-            knapsackItems.Add(new Bag.Item() { Name = "Glucose", Weight = 15, Value = 60 });
-            knapsackItems.Add(new Bag.Item() { Name = "Tin", Weight = 68, Value = 45 });
-            knapsackItems.Add(new Bag.Item() { Name = "Banana", Weight = 27, Value = 60 });
-            knapsackItems.Add(new Bag.Item() { Name = "Apple", Weight = 39, Value = 40 });
-            knapsackItems.Add(new Bag.Item() { Name = "Cheese", Weight = 23, Value = 30 });
-            knapsackItems.Add(new Bag.Item() { Name = "Beer", Weight = 52, Value = 10 });
-            knapsackItems.Add(new Bag.Item() { Name = "Suntan Cream", Weight = 11, Value = 70 });
-            knapsackItems.Add(new Bag.Item() { Name = "Camera", Weight = 32, Value = 30 });
-            knapsackItems.Add(new Bag.Item() { Name = "T-shirt", Weight = 24, Value = 15 });
-            knapsackItems.Add(new Bag.Item() { Name = "Trousers", Weight = 48, Value = 10 });
-            knapsackItems.Add(new Bag.Item() { Name = "Umbrella", Weight = 73, Value = 40 });
-            knapsackItems.Add(new Bag.Item() { Name = "WaterProof Trousers", Weight = 42, Value = 70 });
-            knapsackItems.Add(new Bag.Item() { Name = "Note-Case", Weight = 22, Value = 80 });
-            knapsackItems.Add(new Bag.Item() { Name = "Sunglasses", Weight = 7, Value = 20 });
-            knapsackItems.Add(new Bag.Item() { Name = "Towel", Weight = 18, Value = 12 });
-            knapsackItems.Add(new Bag.Item() { Name = "Socks", Weight = 4, Value = 50 });
-            knapsackItems.Add(new Bag.Item() { Name = "Book", Weight = 30, Value = 10 });
-            knapsackItems.Add(new Bag.Item() { Name = "Waterproof Overclothes", Weight = 43, Value = 75 });
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-            Bag b = new Bag();
-            b.Calculate(knapsackItems);
-            b.All(x =>
+            Action<object> write = Console.Write;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            write("Running ..\n\n");
+            var rand = new Random();
+
+            // --------- Insert data here                        
+            const int maxWeight = 10;
+            const int N = 100000;
+            var items = new List<Item>();
+
+            for (var i = 0; i < N; i++)
             {
-                Console.WriteLine(x);
-                return true;
-            });
-            Console.WriteLine(b.Sum(x => x.Weight));
+                items.Add(new Item { w = rand.Next(1, 10), v = rand.Next(1, 10000) });
+            }
+            //items.AddRange(new List<Item>
+            //               {
+            //                   new Item {w = 5, v = 10},
+            //                   new Item {w = 4, v = 40},
+            //                   new Item {w = 6, v = 30},
+            //                   new Item {w = 3, v = 50},
+            //               });
+
+            // ---------
+
+            Knapsack.Init(items, maxWeight);
+            Knapsack.Run();
+
+            stopwatch.Stop();
+
+            write("Done\n\n");
+
+            // Knapsack.PrintPicksMatrix(write);            
+            Knapsack.Print(write, false);
+
+            write(string.Format("\n\nDuration: {0}\nPress a key to exit\n",
+                stopwatch.Elapsed.ToString()));
             Console.ReadKey();
+        }
+    }
+
+    internal static class Knapsack
+    {
+        private static int[][] M { get; set; }
+        private static int[][] P { get; set; }
+        private static Item[] I { get; set; }
+        public static int MaxValue { get; private set; }
+        private static int W { get; set; }
+
+        public static void Init(List<Item> items, int maxWeight)
+        {
+            I = items.ToArray();
+            W = maxWeight;
+
+            var n = I.Length;
+            M = new int[n + 1][];
+            P = new int[n + 1][];
+            for (var i = 0; i < M.Length; i++)
+            {
+                M[i] = new int[W + 1];
+            }
+            for (var i = 0; i < P.Length; i++)
+            {
+                P[i] = new int[W + 1];
+            }
+        }
+
+        public static void Run()
+        {
+            var n = I.Length;
+
+            for (var i = 1; i <= n; i++)
+            {
+                for (var j = 0; j <= W; j++)
+                {
+                    if (I[i - 1].w <= j)
+                    {
+                        M[i][j] = Max(M[i - 1][j], I[i - 1].v + M[i - 1][j - I[i - 1].w]);
+                        if (I[i - 1].v + M[i - 1][j - I[i - 1].w] > M[i - 1][j])
+                        {
+                            P[i][j] = 1;
+                        }
+                        else
+                        {
+                            P[i][j] = -1;
+                        }
+                    }
+                    else
+                    {
+                        P[i][j] = -1;
+                        M[i][j] = M[i - 1][j];
+                    }
+                }
+            }
+            MaxValue = M[n][W];
+        }
+
+        public static void Print(Action<object> write, bool all)
+        {
+            var list = new List<Item>();
+            list.AddRange(I);
+            var w = W;
+            var i = list.Count;
+
+            write(string.Format("Items: = {0}\n", list.Count));
+            if (all)
+            {
+                list.ForEach(a => write(string.Format("{0}\n", a)));
+            }
+
+            write(string.Format("\nMax weight = {0}\n", W));
+            write(string.Format("Max value = {0}\n", MaxValue));
+            write("\nPicks were:\n");
+
+            var valueSum = 0;
+            var weightSum = 0;
+            while (i >= 0 && w >= 0)
+            {
+                if (P[i][w] == 1)
+                {
+                    valueSum += list[i - 1].v;
+                    weightSum += list[i - 1].w;
+                    if (all)
+                    {
+                        write(string.Format("{0}\n", list[i - 1]));
+                    }
+
+                    w -= list[i - 1].w;
+                }
+
+                i--;
+            }
+            write(string.Format("\nvalue sum: {0}\nweight sum: {1}",
+                valueSum, weightSum));
+        }
+
+        public static void PrintPicksMatrix(Action<object> write)
+        {
+            write("\n\n");
+            foreach (var i in P)
+            {
+                foreach (var j in i)
+                {
+                    var s = j.ToString();
+                    var _ = s.Length > 1 ? " " : "  ";
+                    write(string.Concat(s, _));
+                }
+                write("\n");
+            }
+        }
+
+        private static int Max(int a, int b)
+        {
+            return a > b ? a : b;
+        }
+    }
+
+    internal class Item
+    {
+        private static int _counter;
+        public int Id { get; private set; }
+        public int v { get; set; } // value
+        public int w { get; set; } // weight
+
+        public Item()
+        {
+            Id = ++_counter;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Id: {0}  v: {1}  w: {2}",
+                Id, v, w);
         }
     }
 }
