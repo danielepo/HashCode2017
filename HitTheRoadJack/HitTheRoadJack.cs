@@ -12,13 +12,19 @@ namespace HitTheRoadJack
     {
         private static void Main(string[] args)
         {
-            foreach (var fn in new[] { "kittens" })
+            var inputs = new[] {
+                "me_at_the_zoo",
+                "videos_worth_spreading",
+                "trending_today",
+                "kittens"
+            };
+            foreach (var fn in inputs)
 
             {
                 Console.WriteLine($"starting {fn}");
                 ILoader loader = new Loader($"C:\\{fn}.in");
                 IGenerator generator = new Generator($"{fn}.out");
-                new Solver(loader, generator).Run();
+                new RandomSolver(loader, generator).Run();
                 Console.WriteLine($"finished {fn}");
             }
         }

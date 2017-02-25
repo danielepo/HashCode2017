@@ -5,6 +5,35 @@ using Program.IOManagement;
 
 namespace Program
 {
+    public static class EnumerableExtensions
+    {
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+        {
+            return source.Shuffle(new Random());
+        }
+
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
+        {
+            if (source == null) throw new ArgumentNullException("source");
+            if (rng == null) throw new ArgumentNullException("rng");
+
+            return source.ShuffleIterator(rng);
+        }
+
+        private static IEnumerable<T> ShuffleIterator<T>(
+            this IEnumerable<T> source, Random rng)
+        {
+            var buffer = source.ToList();
+            for (int i = 0; i < buffer.Count; i++)
+            {
+                int j = rng.Next(i, buffer.Count);
+                yield return buffer[j];
+
+                buffer[j] = buffer[i];
+            }
+        }
+    }
+
     public class RandomSolver
     {
         private readonly ILoader _loader;
@@ -19,99 +48,133 @@ namespace Program
         public void Run()
         {
             var input = _loader.Load();
-            List<Server> servers = Map(input);
-            string content = _generator.Convert(servers.ToDictionary(x => x.ID, x => GetVideoForServer(x, input.CapacityOfCacheServer, input.Videos.ToDictionary(y => y.ID))));
+            var servers = new List<Server>();
+            var sum = input.Requests.Select(r => r.NumberOfRequests).Sum() / input.NumberOfRequests;
+            var scale = sum / 10;
+            scale = scale != 0 ? scale : 1;
+            for (int i = 0; i < input.NumberOfCacheServers; i++)
+            {
+                servers.Add(new Server(input.CapacityOfCacheServer) { ID = i });
+            }
+            var requests = Map(input);
+            var byId = requests.ToDictionary(r => r.ID, r => r);
+            var exploded = Explode(requests, scale);
+            Serve(exploded, byId, servers);
+            Dictionary<int, List<Video>> dict = servers.ToDictionary(x => x.ID, x => x.Videos);
+            string content = _generator.Convert(dict);
             _generator.Generate(content);
         }
 
-        public List<Server> Map(Data input)
+        private void Serve(List<int> exploded, Dictionary<int, FullRequest> byId, List<Server> servers)
         {
-            List<Server> servers = new List<Server>();
+            foreach (var id in exploded)
+            {
+                var request = byId[id];
+                request.EnsureServers(servers);
+                request.Serve();
+            }
+        }
+
+        private List<int> Explode(List<FullRequest> requests, int scale)
+        {
+            return requests.SelectMany(r => Enumerable.Repeat(r.ID, r.NumberOfRequests / scale)).ToList().Shuffle().ToList();
+        }
+
+        private List<FullRequest> Map(Data input)
+        {
             var videos = input.Videos.ToDictionary(x => x.ID, x => x);
-            foreach (EndPoint ep in input.Endpoint)
+            var endpoints = input.Endpoint.ToDictionary(x => x.ID, x => x);
+            return input.Requests.Select((r, i) => { return new FullRequest() { ID = i, Video = videos[r.VideoID], EndPoint = new FullEndPoint(endpoints[r.EndPointID]), NumberOfRequests = r.NumberOfRequests }; }).ToList();
+        }
+    }
+
+    public class FullEndPoint
+    {
+        private List<Server> Servers = new List<Server>();
+
+        public List<ConnectedServer> ConnectedServers { get; private set; }
+        public int LatencyDataCenter { get; private set; }
+        public int ID { get; private set; }
+
+        public FullEndPoint(EndPoint endPoint)
+        {
+            ID = endPoint.ID;
+            LatencyDataCenter = endPoint.LatencyDataCenter;
+            ConnectedServers = endPoint.ConnectedServers;
+            ConnectedServers.Sort((s1, s2) => s1.LatencyCache - s2.LatencyCache);
+        }
+
+        internal void EnsureServers(List<Server> servers)
+        {
+            if (Servers.Count > 0)
+                return;
+            Servers.AddRange(ConnectedServers.Select(s => servers[s.CacheServerID]));
+        }
+
+        internal void Serve(Video video)
+        {
+            if (Servers.Any(s => s.HasVideo(video.ID)))
+                return;
+            if (Servers.Count == 0)
+                return;
+            var toAdd = Servers.FirstOrDefault(s => s.CanHold(video));
+            if (toAdd == null)
+                toAdd = Servers[0];
+            toAdd.Add(video);
+        }
+    }
+
+    internal class Server
+    {
+        private int capacity;
+
+        public int ID { get; internal set; }
+        public List<Video> Videos { get; internal set; }
+
+        public Server(int capacity)
+        {
+            this.capacity = capacity;
+            Videos = new List<Video>();
+        }
+
+        internal bool HasVideo(int id)
+        {
+            return Videos.Any(v => v.ID == id);
+        }
+
+        internal void Add(Video video)
+        {
+            capacity -= video.Size;
+            Videos.Add(video);
+            while (capacity < 0)
             {
-                foreach (ConnectedServer cs in ep.ConnectedServers)
-                {
-                    if (!servers.Any(x => x.ID == cs.CacheServerID))
-                    {
-                        servers.Add(new Server { ID = cs.CacheServerID, Latency = cs.LatencyCache });
-                    }
-                }
+                var toRemove = Videos[0];
+                Videos.RemoveAt(0);
+                capacity += toRemove.Size;
             }
-
-            foreach (Server ser in servers)
-            {
-                IEnumerable<EndPoint> endPointCheHannoQuestoServer = input.Endpoint.Where(x => x.ConnectedServers.Any(y => y.CacheServerID == ser.ID));
-                foreach (EndPoint ep in endPointCheHannoQuestoServer)
-                {
-                    ser.endPoints.Add(new EndPoint2 { ID = ep.ID, LatencyDataCenter = ep.LatencyDataCenter });
-                }
-
-                foreach (EndPoint2 ep2 in ser.endPoints)
-                {
-                    var richiesteCheVannoSuQuestoEp = input.Requests.Where(x => x.EndPointID == ep2.ID);
-                    foreach (Request req in richiesteCheVannoSuQuestoEp)
-                    {
-                        var req2 = new Request2();
-                        req2.Count = req.NumberOfRequests;
-                        req2.Video = videos[req.VideoID];
-                        req2.DeltaLatency = ep2.LatencyDataCenter - ser.Latency;
-
-                        ep2.requests.Add(req2);
-                    }
-                }
-            }
-
-            return servers;
         }
 
-        private List<Video> GetVideoForServer(Server server, int maxWeight, Dictionary<int, Video> videos)
+        internal bool CanHold(Video video)
         {
-            List<Item> videoForKnapsack = GetVideoForKnapsack(server);
+            return capacity >= video.Size;
+        }
+    }
 
-            var kn = new Knapsack(videoForKnapsack, maxWeight);
-            kn.Run();
-            return kn.Print().Select(x => videos[x.Id]).ToList();
+    internal class FullRequest
+    {
+        public int ID { get; internal set; }
+        public int NumberOfRequests { get; internal set; }
+        public FullEndPoint EndPoint { get; internal set; }
+        public Video Video { get; internal set; }
+
+        internal void EnsureServers(List<Server> servers)
+        {
+            EndPoint.EnsureServers(servers);
         }
 
-        private List<Item> GetVideoForKnapsack(Server server)
+        internal void Serve()
         {
-            IDictionary<Video, List<Request2>> dict = new Dictionary<Video, List<Request2>>();
-            foreach (Request2 request2 in server.endPoints.SelectMany(x => x.requests))
-            {
-                Video video = request2.Video;
-                if (!dict.ContainsKey(video))
-                {
-                    dict[video] = new List<Request2>();
-                }
-                dict[video].Add(request2);
-            }
-
-            Dictionary<Video, int> quasiItem = dict.ToDictionary(x => x.Key, x => x.Value.Select(req => req.DeltaLatency * req.Count)
-                .Sum());
-
-            return quasiItem.Select(x => new Item() { Id = x.Key.ID, v = x.Value, w = x.Key.Size }).ToList();
-        }
-
-        public class Server
-        {
-            public int ID;
-            public int Latency;
-            public List<EndPoint2> endPoints = new List<EndPoint2>();
-        }
-
-        public class EndPoint2
-        {
-            public int ID;
-            public int LatencyDataCenter;
-            public List<Request2> requests = new List<Request2>();
-        }
-
-        public class Request2
-        {
-            public Video Video;
-            public int DeltaLatency;
-            public int Count;
+            EndPoint.Serve(Video);
         }
     }
 }
