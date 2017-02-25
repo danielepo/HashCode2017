@@ -56,10 +56,7 @@ namespace Tests.UnitTests
             expected.Requests.Add(new Request { NumberOfRequests = 500, VideoID = 4, EndPointID = 0 });
             expected.Requests.Add(new Request { NumberOfRequests = 1000, VideoID = 1, EndPointID = 0 });
 
-
-
             long sizeExpected;
-
 
             using (Stream s = new MemoryStream())
             {
@@ -67,7 +64,6 @@ namespace Tests.UnitTests
                 formatter.Serialize(s, expected);
                 sizeExpected = s.Length;
             }
-
 
             var load = new LoadFile();
 
@@ -81,12 +77,7 @@ namespace Tests.UnitTests
                 sizeResult = s.Length;
             }
 
-
             Assert.AreEqual(sizeResult, sizeExpected);
-
         }
-
-
-
     }
 }

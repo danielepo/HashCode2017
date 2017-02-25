@@ -24,7 +24,48 @@ namespace Program
             _generator.Generate(content);
         }
 
-        private List<Video> GetVideoForServer(Server server, long maxWeight, Dictionary<int, Video> videos)
+        public List<Server> Map(Data input)
+        {
+            List<Server> servers = new List<Server>();
+            var videos = input.Videos.ToDictionary(x => x.ID, x => x);
+            foreach (EndPoint ep in input.Endpoint)
+            {
+                foreach (ConnectedServer cs in ep.ConnectedServers)
+                {
+                    if (!servers.Any(x => x.ID == cs.CacheServerID))
+                    {
+                        servers.Add(new Server { ID = cs.CacheServerID, Latency = cs.LatencyCache });
+                    }
+                }
+            }
+
+            foreach (Server ser in servers)
+            {
+                IEnumerable<EndPoint> endPointCheHannoQuestoServer = input.Endpoint.Where(x => x.ConnectedServers.Any(y => y.CacheServerID == ser.ID));
+                foreach (EndPoint ep in endPointCheHannoQuestoServer)
+                {
+                    ser.endPoints.Add(new EndPoint2 { ID = ep.ID, LatencyDataCenter = ep.LatencyDataCenter });
+                }
+
+                foreach (EndPoint2 ep2 in ser.endPoints)
+                {
+                    var richiesteCheVannoSuQuestoEp = input.Requests.Where(x => x.EndPointID == ep2.ID);
+                    foreach (Request req in richiesteCheVannoSuQuestoEp)
+                    {
+                        var req2 = new Request2();
+                        req2.Count = req.NumberOfRequests;
+                        req2.Video = videos[req.VideoID];
+                        req2.DeltaLatency = ep2.LatencyDataCenter - ser.Latency;
+
+                        ep2.requests.Add(req2);
+                    }
+                }
+            }
+
+            return servers;
+        }
+
+        private List<Video> GetVideoForServer(Server server, int maxWeight, Dictionary<int, Video> videos)
         {
             List<Item> videoForKnapsack = GetVideoForKnapsack(server);
 
@@ -46,75 +87,31 @@ namespace Program
                 dict[video].Add(request2);
             }
 
-            Dictionary<Video, long> quasiItem = dict.ToDictionary(x => x.Key, x => x.Value.Select(req => req.DeltaLatency * req.Count)
+            Dictionary<Video, int> quasiItem = dict.ToDictionary(x => x.Key, x => x.Value.Select(req => req.DeltaLatency * req.Count)
                 .Sum());
 
             return quasiItem.Select(x => new Item() { Id = x.Key.ID, v = x.Value, w = x.Key.Size }).ToList();
         }
 
-        public List<Server> Map(Data input)
+        public class Server
         {
-            List<Server> servers = new List<Server>();
-
-            foreach (EndPoint ep in input.Endpoint)
-            {
-                foreach (ConnectedServer cs in ep.ConnectedServers)
-                {
-                    if (!servers.Any(x => x.ID == cs.CacheServerID))
-                    {
-                        servers.Add(new Server { ID = cs.CacheServerID, Latency = cs.LatencyCache });
-                    }
-                }
-            }
-
-            foreach (Server ser in servers)
-            {
-                IEnumerable<EndPoint> endPointCheHannoQuestoServer = input.Endpoint.Where(x => x.ConnectedServers.Any(y => y.CacheServerID == ser.ID));
-                foreach (EndPoint ep in endPointCheHannoQuestoServer)
-                {
-                    ser.endPoints.Add(new EndPoint2 { ID = ep.ID, LatencyDataCenter = ep.LatencyDataCenter });
-                }
-
-
-                foreach (EndPoint2 ep2 in ser.endPoints)
-                {
-                    var richiesteCheVannoSuQuestoEp = input.Requests.Where(x => x.EndPointID == ep2.ID);
-                    foreach (Request req in richiesteCheVannoSuQuestoEp)
-        {
-                        var req2 = new Request2();
-                        req2.Count = req.NumberOfRequests;
-                        req2.Video = input.Videos.First(x => x.ID == req.VideoID);
-                        req2.DeltaLatency = ep2.LatencyDataCenter - ser.Latency;
-
-
-                        ep2.requests.Add(req2);
-                    }
-                }
+            public int ID;
+            public int Latency;
+            public List<EndPoint2> endPoints = new List<EndPoint2>();
         }
 
-
-            return servers;
-    }
-
-    public class Server
-    {
+        public class EndPoint2
+        {
             public int ID;
-            public long Latency;
-            public List<EndPoint2> endPoints = new List<EndPoint2>();
-    }
-
-    public class EndPoint2
-    {
-            public int ID;
-            public long LatencyDataCenter;
+            public int LatencyDataCenter;
             public List<Request2> requests = new List<Request2>();
         }
 
-    public class Request2
-    {
-        public Video Video;
-        public long DeltaLatency;
-        public long Count;
+        public class Request2
+        {
+            public Video Video;
+            public int DeltaLatency;
+            public int Count;
+        }
     }
-}
 }

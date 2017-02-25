@@ -8,16 +8,16 @@ using Program.IOManagement;
 
 namespace HitTheRoadJack
 {
-    class HitTheRoadJack
+    internal class HitTheRoadJack
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            foreach (var fn in new [] {"trending_today"})
-        
+            foreach (var fn in new[] { "kittens" })
+
             {
                 Console.WriteLine($"starting {fn}");
                 ILoader loader = new Loader($"C:\\{fn}.in");
-                IGenerator generator = new Generator($"C:\\{fn}.out");
+                IGenerator generator = new Generator($"{fn}.out");
                 new Solver(loader, generator).Run();
                 Console.WriteLine($"finished {fn}");
             }

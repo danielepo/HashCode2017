@@ -6,40 +6,39 @@ using System.Threading.Tasks;
 
 namespace Program
 {
-
-    internal  class Knapsack
+    internal class Knapsack
     {
-        private  long[][] M { get; set; }
-        private long[][] P { get; set; }
-        private  Item[] I { get; set; }
-        public long MaxValue { get; private set; }
-        private long W { get; set; }
+        public int MaxValue { get; private set; }
+        private int[][] M { get; set; }
+        private int[][] P { get; set; }
+        private Item[] I { get; set; }
+        private int W { get; set; }
 
-        public Knapsack(List<Item> items, long maxWeight)
+        public Knapsack(List<Item> items, int maxWeight)
         {
             I = items.ToArray();
             W = maxWeight;
 
             var n = I.Length;
-            M = new long[n + 1][];
-            P = new long[n + 1][];
+            M = new int[n + 1][];
+            P = new int[n + 1][];
             for (var i = 0; i < M.Length; i++)
             {
-                M[i] = new long[W + 1];
+                M[i] = new int[W + 1];
             }
             for (var i = 0; i < P.Length; i++)
             {
-                P[i] = new long[W + 1];
+                P[i] = new int[W + 1];
             }
         }
 
-        public  void Run()
+        public void Run()
         {
             var n = I.Length;
 
-            for (long i = 1; i <= n; i++)
+            for (int i = 1; i <= n; i++)
             {
-                for (long j = 0; j <= W; j++)
+                for (int j = 0; j <= W; j++)
                 {
                     if (I[i - 1].w <= j)
                     {
@@ -63,25 +62,24 @@ namespace Program
             MaxValue = M[n][W];
         }
 
-        public  List<Item> Print()
+        public List<Item> Print()
         {
             var list = new List<Item>();
             list.AddRange(I);
             var w = W;
             int i = list.Count;
 
-            var picked = new List<Item>();         
+            var picked = new List<Item>();
 
-
-            long valueSum = 0;
-            long weightSum = 0;
+            int valueSum = 0;
+            int weightSum = 0;
             while (i >= 0 && w >= 0)
             {
                 if (P[i][w] == 1)
                 {
                     valueSum += list[i - 1].v;
                     weightSum += list[i - 1].w;
-                        picked.Add(list[i - 1]);
+                    picked.Add(list[i - 1]);
 
                     w -= list[i - 1].w;
                 }
@@ -91,7 +89,7 @@ namespace Program
             return picked;
         }
 
-        public  void PrintPicksMatrix(Action<object> write)
+        public void PrintPicksMatrix(Action<object> write)
         {
             write("\n\n");
             foreach (var i in P)
@@ -106,7 +104,7 @@ namespace Program
             }
         }
 
-        private static long Max(long a, long b)
+        private static int Max(int a, int b)
         {
             return a > b ? a : b;
         }
@@ -115,8 +113,8 @@ namespace Program
     internal class Item
     {
         public int Id { get; set; }
-        public long v { get; set; } // value
-        public long w { get; set; } // weight
+        public int v { get; set; } // value
+        public int w { get; set; } // weight
 
         public override string ToString()
         {

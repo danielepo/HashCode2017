@@ -49,6 +49,7 @@
     <Compile Include="IOManagement\ILoader.cs" />
     <Compile Include="IOManagement\Loader.cs" />
     <Compile Include="LoadFile.cs" />
+    <Compile Include="RandomSolver.cs" />
     <Compile Include="Solver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

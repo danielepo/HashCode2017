@@ -6,18 +6,11 @@ using System.Threading.Tasks;
 
 namespace Program
 {
-
-
-    public sealed class Video {
-
+    public sealed class Video
+    {
         public int ID;
 
         public int Size;
-
-        private bool Equals(Video other)
-        {
-            return ID == other.ID;
-        }
 
         public override bool Equals(object obj)
         {
@@ -30,10 +23,15 @@ namespace Program
         {
             return ID;
         }
+
+        private bool Equals(Video other)
+        {
+            return ID == other.ID;
+        }
     }
 
-    public class EndPoint {
-
+    public class EndPoint
+    {
         public int ID;//0
 
         public int LatencyDataCenter;
@@ -41,25 +39,20 @@ namespace Program
         public List<ConnectedServer> ConnectedServers = new List<ConnectedServer>();
     }
 
-
-    public class ConnectedServer {
-
+    public class ConnectedServer
+    {
         public int LatencyCache;
 
         public int CacheServerID;
-
     }
 
-
-
-    public class Request {
-
+    public class Request
+    {
         public int VideoID;
 
         public int EndPointID;
 
         public int NumberOfRequests;
-
     }
 
     public class Data
@@ -68,7 +61,7 @@ namespace Program
         public int NumberOfEndpoints;
         public int NumberOfRequests;
         public int NumberOfCacheServers;
-        public long CapacityOfCacheServer;
+        public int CapacityOfCacheServer;
 
         public List<Video> Videos = new List<Video>();
         public List<EndPoint> Endpoint = new List<EndPoint>();
